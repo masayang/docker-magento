@@ -1,9 +1,9 @@
 #!/bin/bash
 set -o errexit
 # Generate a new local CA "/root/.local/share/mkcert"
-docker-compose exec -T -u root app mkcert -install
+sudo docker-compose exec -T -u root app mkcert -install
 
-docker cp "$(docker-compose ps -q app|awk '{print $1}')":/root/.local/share/mkcert/rootCA.pem .
+sudo docker cp "$(sudo docker-compose ps -q app|awk '{print $1}')":/root/.local/share/mkcert/rootCA.pem .
 echo "System password requested to install certificate authority on host..."
 
 if [ "$(uname)" == "Darwin" ]; then
@@ -38,7 +38,7 @@ else
 
   ### Requirement: apt install libnss3-tools
   REQUIRED_PKG="libnss3-tools"
-  PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+  PKG_OK=$(sudo dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
   echo Checking for $REQUIRED_PKG: "$PKG_OK"
   if [ "" = "$PKG_OK" ]; then
     echo "No $REQUIRED_PKG found. Setting up $REQUIRED_PKG."
